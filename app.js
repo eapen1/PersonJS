@@ -25,12 +25,29 @@ $(document).ready(function(){
                     });
 
                     $('#container').html(template);
-                    $('#people-result').show();
+                    $('#people-result').show();//muestra los datos 
     
                 }
     
             })
         }
     })
+
+    //formulario para enviar datos al servidor
+    $('#table-persona').submit(function (e){
+        console.log('enviando');
+        e.preventDefault(); //elimina el comportamiento pro defecto
+        const postData = {
+            name: $('#nombres').val(),
+            lname: $('#apellidos').val(),
+            address: $('#direccion').val(),
+            email: $('#email').val(),
+            phone: $('#telefono').val(),
+        }
+        console.log(postData);
+
+    });
+
+
 });
 
