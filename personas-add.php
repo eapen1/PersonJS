@@ -22,7 +22,7 @@ isset($_POST['telefono'])){
     $sql->execute();
 
     if(!$sql){
-        die('Connection failed');
+        die('Connection failed');   
     }else{
         echo "Succesed, data was stored";   
     }
