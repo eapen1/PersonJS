@@ -60,13 +60,16 @@ $(document).ready(function(){
                 let personas = JSON.parse(response);
                 personas.forEach(persona => {
                         template += `
-                            <tr>
+                            <tr personId="${persona.idPerson}">
                                 <td>${persona.idPerson}</td>
                                 <td>${persona.name}</td>
                                 <td>${persona.lname}</td>
                                 <td>${persona.address}</td>
                                 <td>${persona.email}</td>
                                 <td>${persona.phone}</td>
+                                <td>
+                                <button class="update-persona btn btn-primary">Actualizar</button>
+                                </td>
                                 <td>
                                     <button class="delete-persona btn btn-danger">Eliminar</button>
                                 </td>
@@ -77,6 +80,31 @@ $(document).ready(function(){
             }    
         });         
     }
+
+    //Boton para eliminar un registro
+    $(document).on('click','.delete-persona', function(){
+
+        if(confirm('¿Esta seguro de querer eliminar el registro?')){
+            let element = $(this)[0].parentElement.parentElement;
+            let id = $(element).attr('personId');
+            $.post('personas-delete.php',{id},function(response){
+               // console.log(response);
+                fetchPersonas();
+            })
+        }
+    });
+
+    $(document).on('click','.update-persona', function(){
+
+            let element = $(this)[0].parentElement.parentElement;
+            let id = $(element).attr('personId');
+            $.post('personas-single.php',{id},function(response){
+               console.log(response);
+                fetchPersonas();
+            })
+
+    });
+
 
 });
 
