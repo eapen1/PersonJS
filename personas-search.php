@@ -1,7 +1,7 @@
 <?php 
 require("conexion.php");
 
-if(isset($_POST['search'])){
+if(isset($_POST['search'])){ //verifica si existe
 
     $search = $_POST['search'];
 

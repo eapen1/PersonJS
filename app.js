@@ -4,6 +4,7 @@ $(document).ready(function(){
     $(function(){
         console.log('jquery is ok');
         $('#people-result').hide();
+        fetchPersonas();
     })
     
     //capturando lo que el usuario ingresa
@@ -34,20 +35,48 @@ $(document).ready(function(){
     })
 
     //formulario para enviar datos al servidor
-    $('#table-persona').submit(function (e){
-        console.log('enviando');
-        e.preventDefault(); //elimina el comportamiento pro defecto
+    $('#table-persona').submit(function (e){ 
         const postData = {
-            name: $('#nombres').val(),
-            lname: $('#apellidos').val(),
-            address: $('#direccion').val(),
+            nombres: $('#nombres').val(),
+            apellidos: $('#apellidos').val(),
+            direccion: $('#direccion').val(),
             email: $('#email').val(),
-            phone: $('#telefono').val(),
-        }
-        console.log(postData);
-
+            telefono    : $('#telefono').val()
+        };
+        $.post('personas-add.php', postData, function(response){
+            fetchPersonas();    
+            $('#table-persona').trigger('reset');
+        });
+        e.preventDefault(); //elimina el comportamiento por defecto
     });
-
+    
+    //actualiza en tiempo real la tabla
+    function fetchPersonas(){
+        $.ajax({
+            url: 'personas-list.php',
+            type: 'GET',
+            success: function(response){
+                let template='';
+                let personas = JSON.parse(response);
+                personas.forEach(persona => {
+                        template += `
+                            <tr>
+                                <td>${persona.idPerson}</td>
+                                <td>${persona.name}</td>
+                                <td>${persona.lname}</td>
+                                <td>${persona.address}</td>
+                                <td>${persona.email}</td>
+                                <td>${persona.phone}</td>
+                                <td>
+                                    <button class="delete-persona btn btn-danger">Eliminar</button>
+                                </td>
+                            </tr>
+                        `                
+                });
+                $('#tPersonas').html(template);
+            }    
+        });         
+    }
 
 });
 
