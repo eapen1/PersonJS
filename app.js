@@ -1,5 +1,6 @@
 $(document).ready(function(){
 
+    let editar = false;
     //verificando que jquery este cargado
     $(function(){
         console.log('jquery is ok');
@@ -36,16 +37,21 @@ $(document).ready(function(){
 
     //formulario para enviar datos al servidor
     $('#table-persona').submit(function (e){ 
+        let url = editar === false ? 'personas-add.php' : 'personas-edit.php';
         const postData = {
+            idPers: $('#idPers').val(),
             nombres: $('#nombres').val(),
             apellidos: $('#apellidos').val(),
             direccion: $('#direccion').val(),
             email: $('#email').val(),
-            telefono    : $('#telefono').val()
-        };
-        $.post('personas-add.php', postData, function(response){
+            telefono: $('#telefono').val(),
+        }
+
+        $.post(url, postData, function(response){
+            console.log(response);
             fetchPersonas();    
             $('#table-persona').trigger('reset');
+            editar=false;
         });
         e.preventDefault(); //elimina el comportamiento por defecto
     });
@@ -68,15 +74,16 @@ $(document).ready(function(){
                                 <td>${persona.email}</td>
                                 <td>${persona.phone}</td>
                                 <td>
-                                <button class="update-persona btn btn-primary">Actualizar</button>
+                                <button id="btnEditar" class="update-persona btn btn-primary">Editar</button>
                                 </td>
                                 <td>
-                                    <button class="delete-persona btn btn-danger">Eliminar</button>
+                                <button class="delete-persona btn btn-danger">Eliminar</button>
                                 </td>
                             </tr>
                         `                
                 });
                 $('#tPersonas').html(template);
+                $('#submit').text('Guardar');
             }    
         });         
     }
@@ -94,14 +101,28 @@ $(document).ready(function(){
         }
     });
 
+
+    //llena los datos en el formulario
     $(document).on('click','.update-persona', function(){
 
             let element = $(this)[0].parentElement.parentElement;
             let id = $(element).attr('personId');
             $.post('personas-single.php',{id},function(response){
-               console.log(response);
-                fetchPersonas();
+                const per = JSON.parse(response);
+                $('#idPers').val(per.idPerson),
+                $('#nombres').val(per.name),
+                $('#apellidos').val(per.lname),
+                $('#direccion').val(per.address),
+                $('#email').val(per.email),
+                $('#telefono').val(per.phone)
+                editar=true;
             })
+            if(editar!=false){
+                $('#submit').text('Guardar');    
+            }else{
+                $('#submit').text('actualizar');    
+            }
+    
 
     });
 

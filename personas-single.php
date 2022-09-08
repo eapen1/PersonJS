@@ -5,7 +5,7 @@
         $sql= $conexion->prepare("SELECT * FROM people WHERE idPerson = :id");
         $sql->bindParam(':id',$_POST['id']);
         $sql->execute();
-        $resultsJson = json_encode($sql ->fetchAll(PDO::FETCH_OBJ));
+        $resultsJson = json_encode($sql ->fetchAll(PDO::FETCH_OBJ)[0]);
 
         if(!$resultsJson){
             die('Query Error');
